@@ -32,6 +32,7 @@
         </v-container>
       </v-main>
     </client-only>
+    <toaster></toaster>
   </v-app>
 </template>
 <script setup lang='ts'>

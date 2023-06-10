@@ -25,7 +25,6 @@
   const { keptPokemons } = storeToRefs(useContextStore())
 
   const removePokemon = (pokemon: PokemonModel) => {
-    console.log(pokemon)
     if (!pokemon) {
       console.error('no pokemon selected')
     }

@@ -35,7 +35,6 @@ export const useContextStore = defineStore('context', {
       })
 
       if (pokemon.value) {
-        console.log('Should set value')
         const pokemonStats: PokemonResponseStat[] = pokemon.value.stats
 
         type statKeys = keyof PokemonModelStats;
@@ -55,7 +54,6 @@ export const useContextStore = defineStore('context', {
           img: pokemon.value.sprites.front_default
         }
         this.randomPokemon = mappedPokemon
-        console.log(this.randomPokemon)
       } else {
         this.randomPokemon = {
           id: '',
@@ -80,7 +78,6 @@ export const useContextStore = defineStore('context', {
       if (!pokemon || !pokemon.id) {
         console.error('No pokemon provided')
       }
-      console.log(pokemon.id)
       this.keptPokemons = this.keptPokemons.filter(p => p.id !== pokemon.id)
     }
 
