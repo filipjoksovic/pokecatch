@@ -1,5 +1,4 @@
 <template>
-  <!-- TEMPLATE CODE GOES HERE -->
   <v-card class='elevation-6 mt-10'>
     <v-container>
       <v-row align='center'>
