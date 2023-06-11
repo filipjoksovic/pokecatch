@@ -1,6 +1,6 @@
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter'
 import {
-  PokemonAbility,
+  PokemonAbility, PokemonDetailedAbilityResponse, PokemonDetailedMoveResponse,
   PokemonDetailsModel,
   PokemonModel,
   PokemonModelStats,
@@ -8,7 +8,7 @@ import {
   PokemonResponse,
   PokemonResponseAbility,
   PokemonResponseMove,
-  PokemonResponseSpecies,
+  PokemonDetailedSpeciesResponse,
   PokemonResponseStat,
   PokemonSpecies
 } from '~/utils/types'
@@ -21,7 +21,7 @@ export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): P
     stat => includedStats.includes(stat.stat.name)
   ).reduce(
     (acc: Partial<PokemonModelStats>, item) => {
-      acc[item.stat.name as keyof PokemonModelStats] = item.base_stat !== undefined ? item.base_stat : 0
+      acc[item.stat.name as keyof PokemonModelStats] = item.base_stat
       return acc
     }, {})
 
@@ -54,10 +54,7 @@ export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: Pok
 
 export async function responseAbilitiesToModelAbilities(responseAbilities: PokemonResponseAbility[]): Promise<PokemonAbility[]> {
   const [mapped] = await Promise.all([Promise.all(responseAbilities.map(async responseAbility => {
-    const { data: detailedAbility } = await useFetch<{
-      flavor_text_entries: { flavor_text: string, language: { name: string, url: string }, version_group: object }[],
-      effect_entries: { effect: string, language: { name: string, url: string } }[]
-    }>(responseAbility.ability.url, {
+    const { data: detailedAbility } = await useFetch<PokemonDetailedAbilityResponse>(responseAbility.ability.url, {
       pick: ['flavor_text_entries', 'effect_entries']
     })
 
@@ -66,8 +63,8 @@ export async function responseAbilitiesToModelAbilities(responseAbilities: Pokem
     return {
       name: capitalizeFirstLetter(responseAbility.ability.name),
       url: responseAbility.ability.url,
-      longDescription: longDescription && longDescription.effect || 'No long description',//todo fix error,
-      shortDescription: shortDescription && shortDescription.flavor_text || 'No short description' //todo fix error
+      longDescription: longDescription && longDescription.effect || 'No long description',
+      shortDescription: shortDescription && shortDescription.flavor_text || 'No short description'
     } as PokemonAbility
 
   }))])
@@ -79,9 +76,7 @@ export async function responseMovesToModelMoves(responseMoves: PokemonResponseMo
   const mappedMoves: PokemonMove[] = []
 
   for (let i = 0; i < responseMoves.length && i < numberOfMappings; i++) {
-    const { data: move } = await useFetch<{
-      effect_entries: { effect: string, language: { name: string, url: string } }[]
-    }>(responseMoves[i].move.url, {
+    const { data: move } = await useFetch<PokemonDetailedMoveResponse>(responseMoves[i].move.url, {
       pick: ['effect_entries']
     })
     const foundEntry = move.value && move.value.effect_entries.find(entry => entry.language.name === 'en')
@@ -95,7 +90,7 @@ export async function responseMovesToModelMoves(responseMoves: PokemonResponseMo
 }
 
 export async function speciesResponseToDetailedSpeciesMapper(speciesUrl: string): Promise<PokemonSpecies> {
-  const { data: rawSpecies } = await useFetch<PokemonResponseSpecies>(speciesUrl, {
+  const { data: rawSpecies } = await useFetch<PokemonDetailedSpeciesResponse>(speciesUrl, {
     pick: ['id', 'name', 'order', 'capture_rate']
   })
   if (rawSpecies.value) {

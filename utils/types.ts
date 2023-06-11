@@ -6,7 +6,7 @@ export type PokemonResponse = {
   forms: PokemonResponseForm[];
   sprites: PokemonSprites;
   moves: PokemonResponseMove[];
-  species: PokemonResponseSpecies;
+  species: PokemonDetailedSpeciesResponse;
   location_area_encounters: string;
 }
 
@@ -29,7 +29,7 @@ export interface PokemonResponseMove {
   }
 }
 
-export interface PokemonResponseSpecies {
+export interface PokemonDetailedSpeciesResponse {
   id: number;
   name: string;
   order: number;
@@ -99,4 +99,32 @@ export interface PokemonSprites {
   back_default: string;
   front_shiny: string;
   back_shiny: string;
+}
+
+//There probably is a relation between effect_entries in these two interfaces, but i don't wanna couple them together yet, so they can stay individual now
+export interface PokemonDetailedAbilityResponse {
+  flavor_text_entries:
+    {
+      flavor_text: string;
+      language: Language;
+      version_group: object
+    }[],
+  effect_entries:
+    {
+      effect: string;
+      language: Language
+    }[]
+}
+
+
+export interface PokemonDetailedMoveResponse {
+  effect_entries: {
+    effect: string;
+    language: Language
+  }[]
+}
+
+export interface Language {
+  name: string;
+  url: string;
 }
