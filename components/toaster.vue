@@ -1,12 +1,4 @@
 <!--Toaster component to avoid MUI rules of snackbars being stuck to bottom-->
-<script setup lang='ts'>
-  import { useToasterStore } from '~/store/toaster.store'
-  import { storeToRefs } from 'pinia'
-
-  const toasterStore = useToasterStore()
-  const { visible, message, timeout, icon, type, contentClass } = storeToRefs(toasterStore)
-</script>
-
 <template>
   <v-snackbar
     v-model='visible'
@@ -27,9 +19,16 @@
   </v-snackbar>
 </template>
 
+<script setup lang='ts'>
+  import { useToasterStore } from '~/store/toaster.store'
+  import { storeToRefs } from 'pinia'
+
+  const toasterStore = useToasterStore()
+  const { visible, message, timeout, icon, type, contentClass } = storeToRefs(toasterStore)
+</script>
+
 <style>
-    //reset for snackbar as toaster implementation
-    .top-0 {
+    .position-top {
         top: 0 !important;
         bottom: unset !important;
         left: unset !important;

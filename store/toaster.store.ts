@@ -20,7 +20,7 @@ export const useToasterStore = defineStore('toaster', {
     icon: '',
     timeout: 0,
     type: 'info',
-    contentClass: 'top-0'
+    contentClass: 'position-top'
   }),
 
   actions: {

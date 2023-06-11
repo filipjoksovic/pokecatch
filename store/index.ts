@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getRandomNumber } from '~/helpers/getRandomNumber'
+import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter'
 
 export interface IGlobalState {
   randomPokemon: PokemonModel;
@@ -48,7 +49,7 @@ export const useContextStore = defineStore('context', {
 
         const mappedPokemon: PokemonModel = {
           id: pokemon.value.id,
-          name: pokemon.value.name,
+          name: capitalizeFirstLetter(pokemon.value.name),
           mainAbility: pokemon.value.abilities[0].ability.name,
           stats: mappedStats,
           img: pokemon.value.sprites.front_default
