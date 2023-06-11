@@ -1,6 +1,9 @@
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter'
 import {
-  PokemonAbility, PokemonDetailedAbilityResponse, PokemonDetailedMoveResponse,
+  PokemonAbility,
+  PokemonDetailedAbilityResponse,
+  PokemonDetailedMoveResponse,
+  PokemonDetailedSpeciesResponse,
   PokemonDetailsModel,
   PokemonModel,
   PokemonModelStats,
@@ -8,10 +11,11 @@ import {
   PokemonResponse,
   PokemonResponseAbility,
   PokemonResponseMove,
-  PokemonDetailedSpeciesResponse,
   PokemonResponseStat,
   PokemonSpecies
 } from '~/utils/types'
+
+const SELECTED_LANG = 'en'
 
 export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): PokemonModel {
   const pokemonStats: PokemonResponseStat[] = pokemon.stats
@@ -35,7 +39,8 @@ export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): P
 }
 
 export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: PokemonResponse): Promise<Partial<PokemonDetailsModel>> {
-  //to avoid making unecessary requests, keep abilities, species and moves data separate when just loading the model
+  //to avoid making unecessary requests and increasing loading times,
+  // keep abilities, species and moves data separate when just loading the model, creating all kinds of other problems :) 
   return {
     id: pokemonResponse.id,
     name: capitalizeFirstLetter(pokemonResponse.name),
@@ -53,22 +58,25 @@ export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: Pok
 }
 
 export async function responseAbilitiesToModelAbilities(responseAbilities: PokemonResponseAbility[]): Promise<PokemonAbility[]> {
-  const [mapped] = await Promise.all([Promise.all(responseAbilities.map(async responseAbility => {
-    const { data: detailedAbility } = await useFetch<PokemonDetailedAbilityResponse>(responseAbility.ability.url, {
-      pick: ['flavor_text_entries', 'effect_entries']
-    })
+  return Promise.all(
+    responseAbilities.map(
+      async responseAbility => {
+        const { data: detailedAbility } =
+          await useFetch<PokemonDetailedAbilityResponse>(responseAbility.ability.url, {
+            pick: ['flavor_text_entries', 'effect_entries']
+          })
 
-    const longDescription = detailedAbility.value && detailedAbility.value.effect_entries.find(effect => effect.language.name === 'en')
-    const shortDescription = detailedAbility.value && detailedAbility.value.flavor_text_entries.find(entry => entry.language.name === 'en')
-    return {
-      name: capitalizeFirstLetter(responseAbility.ability.name),
-      url: responseAbility.ability.url,
-      longDescription: longDescription && longDescription.effect || 'No long description',
-      shortDescription: shortDescription && shortDescription.flavor_text || 'No short description'
-    } as PokemonAbility
-
-  }))])
-  return mapped
+        const longDescription = detailedAbility.value && detailedAbility.value.effect_entries.find(effect => effect.language.name === SELECTED_LANG)
+        const shortDescription = detailedAbility.value && detailedAbility.value.flavor_text_entries.find(entry => entry.language.name === SELECTED_LANG)
+        return {
+          name: capitalizeFirstLetter(responseAbility.ability.name),
+          url: responseAbility.ability.url,
+          longDescription: longDescription && longDescription.effect || 'No long description',
+          shortDescription: shortDescription && shortDescription.flavor_text || 'No short description'
+        } as PokemonAbility
+      }
+    )
+  )
 
 }
 
@@ -76,10 +84,13 @@ export async function responseMovesToModelMoves(responseMoves: PokemonResponseMo
   const mappedMoves: PokemonMove[] = []
 
   for (let i = 0; i < responseMoves.length && i < numberOfMappings; i++) {
-    const { data: move } = await useFetch<PokemonDetailedMoveResponse>(responseMoves[i].move.url, {
-      pick: ['effect_entries']
-    })
-    const foundEntry = move.value && move.value.effect_entries.find(entry => entry.language.name === 'en')
+    const { data: move } = await useFetch<PokemonDetailedMoveResponse>(
+      responseMoves[i].move.url,
+      {
+        pick: ['effect_entries']
+      }
+    )
+    const foundEntry = move.value && move.value.effect_entries.find(entry => entry.language.name === SELECTED_LANG)
     mappedMoves.push({
       name: capitalizeFirstLetter(responseMoves[i].move.name.split('-').join(' ')),
       description: foundEntry && foundEntry.effect || 'No description'
