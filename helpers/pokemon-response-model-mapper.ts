@@ -40,7 +40,7 @@ export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): P
 
 export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: PokemonResponse): Promise<Partial<PokemonDetailsModel>> {
   //to avoid making unecessary requests and increasing loading times,
-  // keep abilities, species and moves data separate when just loading the model, creating all kinds of other problems :) 
+  // keep abilities, species and moves data separate when just loading the model, creating all kinds of other problems :)
   return {
     id: pokemonResponse.id,
     name: capitalizeFirstLetter(pokemonResponse.name),
@@ -104,19 +104,10 @@ export async function speciesResponseToDetailedSpeciesMapper(speciesUrl: string)
   const { data: rawSpecies } = await useFetch<PokemonDetailedSpeciesResponse>(speciesUrl, {
     pick: ['id', 'name', 'order', 'capture_rate']
   })
-  if (rawSpecies.value) {
-    return {
-      id: rawSpecies.value.id,
-      name: capitalizeFirstLetter(rawSpecies.value.name),
-      order: rawSpecies.value.order,
-      captureRate: rawSpecies.value.capture_rate
-    }
-  }
   return {
-    id: -1,
-    name: '',
-    order: -1,
-    captureRate: 0
+    id: rawSpecies.value && rawSpecies.value.id || -1,
+    name: capitalizeFirstLetter(rawSpecies.value && rawSpecies.value.name || 'No name'),
+    order: rawSpecies.value && rawSpecies.value.order || -1,
+    captureRate: rawSpecies.value && rawSpecies.value.capture_rate || 0
   }
-
 }
