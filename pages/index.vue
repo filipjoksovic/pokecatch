@@ -5,5 +5,7 @@
   import { useContextStore } from '~/store'
 
   const store = useContextStore()
-  store.loadRandomPokemon()
+  if (!store.randomPokemon.id) {
+    store.loadRandomPokemon()
+  }
 </script>
