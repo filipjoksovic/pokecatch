@@ -1,36 +1,37 @@
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter'
 import {
-  EncounterDetailsResponse,
-  PokemonAbility, PokemonDetailsEncounter,
+  PokemonAbility,
   PokemonDetailsModel,
   PokemonModel,
-  PokemonModelStats, PokemonMove,
-  PokemonResponse, PokemonResponseAbility, PokemonResponseEncounter, PokemonResponseMove, PokemonResponseSpecies,
-  PokemonResponseStat, PokemonSpecies
+  PokemonModelStats,
+  PokemonMove,
+  PokemonResponse,
+  PokemonResponseAbility,
+  PokemonResponseMove,
+  PokemonResponseSpecies,
+  PokemonResponseStat,
+  PokemonSpecies
 } from '~/utils/types'
-import { found } from '@jridgewell/trace-mapping/dist/types/binary-search'
 
 export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): PokemonModel {
   const pokemonStats: PokemonResponseStat[] = pokemon.stats
 
-  type statKeys = keyof PokemonModelStats;
-  //TODO figure out how to map stats properly
-
   const includedStats = ['hp', 'attack', 'defense', 'speed']
-  const mappedStats = pokemonStats.filter(stat => includedStats.includes(stat.stat.name)).reduce((acc: Partial<PokemonModelStats>, item) => {
-    acc[item.stat.name] = item.base_stat
-    return acc
-  }, {})
+  const mappedStats = pokemonStats.filter(
+    stat => includedStats.includes(stat.stat.name)
+  ).reduce(
+    (acc: Partial<PokemonModelStats>, item) => {
+      acc[item.stat.name as keyof PokemonModelStats] = item.base_stat !== undefined ? item.base_stat : 0
+      return acc
+    }, {})
 
-  const mappedPokemon: PokemonModel = {
+  return {
     id: pokemon.id,
     name: capitalizeFirstLetter(pokemon.name),
     mainAbility: pokemon.abilities[0].ability.name,
-    stats: mappedStats,
+    stats: { ...{ hp: 0, attack: 0, defense: 0, speed: 0 }, ...mappedStats }, //ensure that there will always be data, even though it's unlikely to be missing
     img: pokemon.sprites.front_default
   }
-
-  return mappedPokemon
 }
 
 export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: PokemonResponse): Promise<Partial<PokemonDetailsModel>> {
@@ -52,7 +53,7 @@ export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: Pok
 }
 
 export async function responseAbilitiesToModelAbilities(responseAbilities: PokemonResponseAbility[]): Promise<PokemonAbility[]> {
-  const mapped = await Promise.all(responseAbilities.map(async responseAbility => {
+  const [mapped] = await Promise.all([Promise.all(responseAbilities.map(async responseAbility => {
     const { data: detailedAbility } = await useFetch<{
       flavor_text_entries: { flavor_text: string, language: { name: string, url: string }, version_group: object }[],
       effect_entries: { effect: string, language: { name: string, url: string } }[]
@@ -69,7 +70,7 @@ export async function responseAbilitiesToModelAbilities(responseAbilities: Pokem
       shortDescription: shortDescription && shortDescription.flavor_text || 'No short description' //todo fix error
     } as PokemonAbility
 
-  }))
+  }))])
   return mapped
 
 }

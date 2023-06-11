@@ -41,12 +41,12 @@
   import { useContextStore } from '~/store'
 
   const { mobile } = useDisplay()
-  const { keptPokemons } = storeToRefs(useContextStore())
+  const { storedPokemons } = storeToRefs(useContextStore())
   const drawer = ref(false)
 
   const showDrawer = computed(() => {
     return !mobile.value || drawer.value
   })
 
-  const title = computed(() => `My pokemons (${keptPokemons.value.length})`)
+  const title = computed(() => `My pokemons (${storedPokemons.value.length})`)
 </script>

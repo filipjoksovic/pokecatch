@@ -1,6 +1,6 @@
 import { PokemonModel } from '~/utils/types'
 
-export function getDefaultPokemonState(): PokemonModel {
+export function getRandomPokemonDefaultState(): PokemonModel {
   return {
     id: '',
     name: '',

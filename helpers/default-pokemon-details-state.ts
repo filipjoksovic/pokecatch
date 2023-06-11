@@ -4,6 +4,7 @@ export function getDefaultPokemonDetailsState(): PokemonDetailsModel {
 
   return {
     id: '-1',
+    name: '',
     abilities: [],
     sprites: {
       front_default: '',

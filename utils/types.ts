@@ -4,12 +4,7 @@ export type PokemonResponse = {
   stats: PokemonResponseStat[]
   abilities: PokemonResponseAbility[];
   forms: PokemonResponseForm[];
-  sprites: {
-    front_default: string;
-    back_default: string;
-    front_shiny: string;
-    back_shiny: string;
-  };
+  sprites: PokemonSprites;
   moves: PokemonResponseMove[];
   species: PokemonResponseSpecies;
   location_area_encounters: string;
@@ -39,6 +34,7 @@ export interface PokemonResponseSpecies {
   name: string;
   order: number;
   capture_rate: number;
+  url: string;
 }
 
 export type PokemonResponseStat = {
@@ -66,13 +62,12 @@ export type PokemonModelStats = {
 
 export interface PokemonDetailsModel {
   id: string;
-  name:string;
+  name: string;
   abilities: PokemonAbility[];
   moves: PokemonMove[];
-  sprites: any; //todo remove any
+  sprites: PokemonSprites;
   stats: PokemonDetailsStats[];
   species: PokemonSpecies;
-
 }
 
 export interface PokemonDetailsStats {
@@ -97,4 +92,11 @@ export interface PokemonSpecies {
   name: string;
   order: number;
   captureRate: number;
+}
+
+export interface PokemonSprites {
+  front_default: string;
+  back_default: string;
+  front_shiny: string;
+  back_shiny: string;
 }

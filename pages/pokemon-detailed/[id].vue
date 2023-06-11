@@ -1,6 +1,8 @@
 <script setup lang='ts'>
   import { useContextStore } from '~/store'
   import { storeToRefs } from 'pinia'
+  import PokemonDetailsMoves from '~/pages/pokemon-detailed/PokemonDetailsMoves.vue'
+  import PokemonDetailsSpecies from '~/pages/pokemon-detailed/PokemonDetailsSpecies.vue'
 
   const route = useRoute()
   const store = useContextStore()
@@ -8,7 +10,6 @@
   const { pokemonDetails } = storeToRefs(store)
 
   const tab = ref(null)
-  const toggle_one = ref(0)
 
   const loadPokemonMoves = () => {
     store.loadPokemonMoves()
@@ -25,37 +26,14 @@
   <h1>{{ pokemonDetails && pokemonDetails.name }}</h1>
   <v-container :fluid='true'>
     <v-row>
-      <v-col cols='4' class='d-flex flex-column align-center justify-center'>
-
-        <v-carousel hide-delimiters show-arrows='hover'>
-          <v-carousel-item
-            :src='pokemonDetails.sprites.front_default'
-
-          ></v-carousel-item>
-
-          <v-carousel-item
-            :src='pokemonDetails.sprites.back_default'
-
-          ></v-carousel-item>
-
-          <v-carousel-item
-            :src='pokemonDetails.sprites.front_shiny'
-
-          ></v-carousel-item>
-
-          <v-carousel-item
-            :src='pokemonDetails.sprites.back_shiny'
-
-          ></v-carousel-item>
-
-        </v-carousel>
-
+      <v-col cols='4' sm='12' class='d-flex flex-column align-center justify-center'>
+        <pokemon-sprites-display :sprites='pokemonDetails.sprites'></pokemon-sprites-display>
       </v-col>
-      <v-col cols='8'>
+      <v-col cols='8' sm='12'>
         <v-card>
           <v-tabs
             v-model='tab'
-            bg-color='transparent'
+            bg-color='blue'
           >
             <v-tab value='stats'>Stats</v-tab>
             <v-tab value='abilities'>Abilities</v-tab>
@@ -67,38 +45,23 @@
           <v-card-text>
             <v-window v-model='tab'>
               <v-window-item value='stats'>
-                <v-list lines='one'>
-                  <v-list-item v-for='stat in pokemonDetails.stats' :key='stat.name'
-                               :title='stat.name'
-                               :subtitle='stat.value'>
-                  </v-list-item>
-                </v-list>
+                <pokemon-details-stats v-if='pokemonDetails.stats'
+                                       :stats='pokemonDetails.stats'></pokemon-details-stats>
               </v-window-item>
 
               <v-window-item value='abilities' @group:selected='loadPokemonAbilities'>
-                <v-list lines='two'>
-                  <v-list-item v-for='ability in pokemonDetails.abilities' :key='ability.name'
-                               :title='ability.name + " (" + ability.shortDescription+  ")" '
-                               :subtitle='ability.longDescription'>
-
-                  </v-list-item>
-                </v-list>
+                <pokemon-details-abilities v-if='pokemonDetails.abilities'
+                                           :abilities='pokemonDetails.abilities'></pokemon-details-abilities>
 
               </v-window-item>
 
               <v-window-item value='moves' @group:selected='loadPokemonMoves'>
-                <v-list lines='two'>
-                  <v-list-item v-for='move in pokemonDetails.moves' :key='move.name'
-                               :title='move.name'
-                               :subtitle='move.description'>
-                  </v-list-item>
-                </v-list>
+                <pokemon-details-moves v-if='pokemonDetails.moves' :moves='pokemonDetails.moves' />
               </v-window-item>
 
 
               <v-window-item value='species' @group:selected='loadPokemonSpecies'>
-                <p>Species name: {{ pokemonDetails.species && pokemonDetails.species.name }}</p>
-                <p>Capture rate: {{ pokemonDetails.species && pokemonDetails.species.captureRate }}</p>
+                <pokemon-details-species v-if='pokemonDetails.species' :species='pokemonDetails.species' />
               </v-window-item>
             </v-window>
           </v-card-text>
@@ -107,7 +70,3 @@
     </v-row>
   </v-container>
 </template>
-
-<style scoped>
-
-</style>

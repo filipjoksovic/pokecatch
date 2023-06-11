@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { getRandomNumber } from '~/helpers/getRandomNumber'
-import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter'
 import {
   pokemonResponseToPokemonDetailsMapper,
   pokemonResponseToPokemonModelMapper,
@@ -11,33 +10,22 @@ import {
 import { getDefaultPokemonState } from '~/helpers/default-pokemon-state'
 import { PokemonDetailsModel, PokemonModel, PokemonResponse } from '~/utils/types'
 import { getDefaultPokemonDetailsState } from '~/helpers/default-pokemon-details-state'
+import { getRandomPokemonDefaultState } from '~/helpers/default-random-pokemon.state'
+import { getDefaultPokemonResponseState } from '~/helpers/default-pokemon-response.state'
 
 export interface IGlobalState {
   randomPokemon: PokemonModel;
-  keptPokemons: PokemonModel[];
+  storedPokemons: PokemonModel[];
   pokemonDetails: Partial<PokemonDetailsModel>;
-  rawPokemonDetails: PokemonResponse | null
+  rawPokemonDetails: PokemonResponse
 }
 
 export const useContextStore = defineStore('context', {
-  // PINIA CODE GOES HERE
-
   state: (): IGlobalState => ({
-    randomPokemon: {
-      id: '',
-      name: '',
-      stats: {
-        hp: 0,
-        attack: 0,
-        defense: 0,
-        speed: 0
-      },
-      mainAbility: '',
-      img: ''
-    },
-    keptPokemons: [],
+    randomPokemon: getRandomPokemonDefaultState(),
+    storedPokemons: [],
     pokemonDetails: getDefaultPokemonDetailsState(),
-    rawPokemonDetails: null
+    rawPokemonDetails: getDefaultPokemonResponseState() //store the raw response model (i see no other way of storing it for later use)
   }),
   actions: {
     async loadRandomPokemon() {
@@ -57,18 +45,19 @@ export const useContextStore = defineStore('context', {
     },
 
     keepPokemon() {
-      this.keptPokemons.push(this.randomPokemon)
+      this.storedPokemons.push(this.randomPokemon)
     },
 
     removePokemon(pokemon: PokemonModel) {
       if (!pokemon || !pokemon.id) {
         console.error('No pokemon provided')
+        return
       }
-      this.keptPokemons = this.keptPokemons.filter(p => p.id !== pokemon.id)
+      this.storedPokemons = this.storedPokemons.filter(p => p.id !== pokemon.id)
     },
 
     loadPokemonMoves() {
-      responseMovesToModelMoves(this.rawPokemonDetails && this.rawPokemonDetails.moves || [], 5).then(moves => {
+      responseMovesToModelMoves(this.rawPokemonDetails.moves || [], 5).then(moves => {
         this.pokemonDetails = {
           ...this.pokemonDetails,
           moves: moves
@@ -78,7 +67,7 @@ export const useContextStore = defineStore('context', {
     },
 
     loadPokemonAbilities() {
-      responseAbilitiesToModelAbilities(this.rawPokemonDetails && this.rawPokemonDetails.abilities || []).then((abilities => {
+      responseAbilitiesToModelAbilities(this.rawPokemonDetails.abilities || []).then((abilities => {
         this.pokemonDetails = {
           ...this.pokemonDetails,
           abilities: abilities
@@ -87,7 +76,7 @@ export const useContextStore = defineStore('context', {
     },
 
     loadPokemonSpecies() {
-      speciesResponseToDetailedSpeciesMapper(this.rawPokemonDetails && this.rawPokemonDetails.species.url).then((species) => {
+      speciesResponseToDetailedSpeciesMapper(this.rawPokemonDetails.species.url).then((species) => {
         this.pokemonDetails = {
           ...this.pokemonDetails,
           species: species

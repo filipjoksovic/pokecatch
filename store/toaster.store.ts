@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { visible } from 'ansi-colors'
 
 export type ToastMessageType = 'success' | 'error' | 'warning' | 'info'
 
@@ -33,10 +32,10 @@ export const useToasterStore = defineStore('toaster', {
       this.contentClass = contentClass
     },
     success(message: string, timeout: number) {
-      this.toast(message, 'mdi-check', timeout, 'success', 'top-0 bg-green')
+      this.toast(message, 'mdi-check', timeout, 'success', 'position-top bg-green')
     },
     error(message: string, timeout: number) {
-      this.toast(message, 'mdi-cancel', timeout, 'success', 'top-0 bg-red')
+      this.toast(message, 'mdi-cancel', timeout, 'error', 'position-top bg-red')
     }
 
   }
