@@ -15,10 +15,7 @@ export function getDefaultPokemonResponseState(): PokemonResponse {
     },
     moves: [],
     species: {
-      id: -1,
       name: '',
-      order: -1,
-      capture_rate: 0,
       url: ''
     },
     location_area_encounters: ''

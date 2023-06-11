@@ -5,9 +5,9 @@
   </v-container>
 </template>
 <script setup lang='ts'>
-  import { PokemonSpecies } from '~/utils/types'
+  import { PokemonDetailsSpecies } from '~/utils/types'
 
   defineProps<{
-    species:PokemonSpecies
+    species:PokemonDetailsSpecies
   }>()
 </script>

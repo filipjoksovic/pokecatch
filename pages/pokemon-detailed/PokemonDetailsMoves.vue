@@ -7,9 +7,9 @@
   </v-list>
 </template>
 <script setup lang='ts'>
-  import { PokemonMove } from '~/utils/types'
+  import { PokemonDetailsMove } from '~/utils/types'
 
   defineProps<{
-    moves: PokemonMove[]
+    moves: PokemonDetailsMove[]
   }>()
 </script>

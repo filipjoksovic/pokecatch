@@ -1,3 +1,4 @@
+// Raw response data
 export type PokemonResponse = {
   id: string;
   name: string
@@ -6,8 +7,14 @@ export type PokemonResponse = {
   forms: PokemonResponseForm[];
   sprites: PokemonSprites;
   moves: PokemonResponseMove[];
-  species: PokemonDetailedSpeciesResponse;
+  species: PokemonResponseSpecies;
   location_area_encounters: string;
+}
+export type PokemonResponseStat = {
+  base_stat: number
+  stat: {
+    name: string
+  }
 }
 
 export interface PokemonResponseAbility {
@@ -22,6 +29,13 @@ export interface PokemonResponseForm {
   url: string;
 }
 
+export interface PokemonSprites {
+  front_default: string;
+  back_default: string;
+  front_shiny: string;
+  back_shiny: string;
+}
+
 export interface PokemonResponseMove {
   move: {
     name: string;
@@ -29,28 +43,22 @@ export interface PokemonResponseMove {
   }
 }
 
-export interface PokemonDetailedSpeciesResponse {
-  id: number;
+export interface PokemonResponseSpecies {
   name: string;
-  order: number;
-  capture_rate: number;
   url: string;
 }
 
-export type PokemonResponseStat = {
-  base_stat: number
-  stat: {
-    name: string
-  }
-}
+//End of raw response data
 
+//Pokemon model types
 
 export type PokemonModel = {
   id: string;
   name: string
   stats: PokemonModelStats
   mainAbility: string
-  img: string
+  img: string;
+  speciesUrl: string;
 }
 
 export type PokemonModelStats = {
@@ -60,14 +68,29 @@ export type PokemonModelStats = {
   speed: number
 }
 
+//End of pokemon model types
+
+//Detailed model
 export interface PokemonDetailsModel {
   id: string;
   name: string;
-  abilities: PokemonAbility[];
-  moves: PokemonMove[];
+  abilities: PokemonDetailsAbility[];
+  moves: PokemonDetailsMove[];
   sprites: PokemonSprites;
   stats: PokemonDetailsStats[];
-  species: PokemonSpecies;
+  species: PokemonDetailsSpecies;
+}
+
+export interface PokemonDetailsAbility {
+  name: string;
+  url: string;
+  shortDescription: string;
+  longDescription: string;
+}
+
+export interface PokemonDetailsMove {
+  name: string,
+  description: string
 }
 
 export interface PokemonDetailsStats {
@@ -75,33 +98,17 @@ export interface PokemonDetailsStats {
   value: number;
 }
 
-export interface PokemonAbility {
-  name: string;
-  url: string;
-  shortDescription: string;
-  longDescription: string;
-}
-
-export interface PokemonMove {
-  name: string,
-  description: string
-}
-
-export interface PokemonSpecies {
+export interface PokemonDetailsSpecies {
   id: number;
   name: string;
   order: number;
   captureRate: number;
 }
 
-export interface PokemonSprites {
-  front_default: string;
-  back_default: string;
-  front_shiny: string;
-  back_shiny: string;
-}
+//End of detailed model
 
-//There probably is a relation between effect_entries in these two interfaces, but i don't wanna couple them together yet, so they can stay individual now
+
+//Misc types
 export interface PokemonDetailedAbilityResponse {
   flavor_text_entries:
     {
@@ -116,6 +123,13 @@ export interface PokemonDetailedAbilityResponse {
     }[]
 }
 
+export interface PokemonDetailedSpeciesResponse {
+  id: number;
+  name: string;
+  order: number;
+  capture_rate: number;
+  url: string;
+}
 
 export interface PokemonDetailedMoveResponse {
   effect_entries: {
@@ -128,3 +142,7 @@ export interface Language {
   name: string;
   url: string;
 }
+
+
+
+

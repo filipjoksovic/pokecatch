@@ -38,29 +38,18 @@
 
   <v-container class='mt-4'>
     <v-row justify='end'>
-      <v-btn class='mr-2' color='green' @click='keepPokemon' prepend-icon='mdi-plus-box'>Keep</v-btn>
-      <v-btn color='blue' @click='search' prepend-icon='mdi-magnify'>Search</v-btn>
+      <v-btn class='mr-2' color='red' @click='store.keepPokemon()' prepend-icon='mdi-pokeball'>Keep</v-btn>
+      <v-btn color='blue' @click='store.loadRandomPokemon()' prepend-icon='mdi-magnify'>Search</v-btn>
     </v-row>
   </v-container>
 </template>
 <script setup lang='ts'>
   import { useContextStore } from '~/store'
   import { storeToRefs } from 'pinia'
-  import { useToasterStore } from '~/store/toaster.store'
 
   const store = useContextStore()
-  const toasterStore = useToasterStore()
   const { randomPokemon } = storeToRefs(useContextStore())
 
-  const search = () => {
-    store.loadRandomPokemon()
-  }
-
-  const keepPokemon = () => {
-    store.keepPokemon()
-    toasterStore.success('Pokemon saved', 2000)
-    store.loadRandomPokemon()
-  }
 </script>
 
 <style>

@@ -11,6 +11,7 @@ export function getRandomPokemonDefaultState(): PokemonModel {
       speed: 0
     },
     mainAbility: '',
-    img: ''
+    img: '',
+    speciesUrl: ''
   }
 }

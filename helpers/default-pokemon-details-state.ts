@@ -1,6 +1,6 @@
 import { PokemonDetailsModel } from '~/utils/types'
 
-export function getDefaultPokemonDetailsState(): PokemonDetailsModel {
+export function getDefaultPokemonDetailsState(): Partial<PokemonDetailsModel> {
 
   return {
     id: '-1',

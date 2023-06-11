@@ -1,9 +1,9 @@
 <script setup lang='ts'>
 
-  import { PokemonAbility } from '~/utils/types'
+  import { PokemonDetailsAbility } from '~/utils/types'
 
   defineProps<{
-    abilities: PokemonAbility[];
+    abilities: PokemonDetailsAbility[];
   }>()
 </script>
 

@@ -1,6 +1,7 @@
 <script setup lang='ts'>
   import { useContextStore } from '~/store'
   import { useToasterStore } from '~/store/toaster.store'
+  import { PokemonModel } from '~/utils/types'
 
   defineProps<{
     pokemon: PokemonModel

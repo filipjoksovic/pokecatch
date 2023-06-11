@@ -1,18 +1,18 @@
 import { capitalizeFirstLetter } from '~/helpers/capitalizeFirstLetter'
 import {
-  PokemonAbility,
   PokemonDetailedAbilityResponse,
   PokemonDetailedMoveResponse,
   PokemonDetailedSpeciesResponse,
+  PokemonDetailsAbility,
   PokemonDetailsModel,
+  PokemonDetailsMove,
+  PokemonDetailsSpecies,
   PokemonModel,
   PokemonModelStats,
-  PokemonMove,
   PokemonResponse,
   PokemonResponseAbility,
   PokemonResponseMove,
-  PokemonResponseStat,
-  PokemonSpecies
+  PokemonResponseStat
 } from '~/utils/types'
 
 const SELECTED_LANG = 'en'
@@ -34,7 +34,8 @@ export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): P
     name: capitalizeFirstLetter(pokemon.name),
     mainAbility: pokemon.abilities[0].ability.name,
     stats: { ...{ hp: 0, attack: 0, defense: 0, speed: 0 }, ...mappedStats }, //ensure that there will always be data, even though it's unlikely to be missing
-    img: pokemon.sprites.front_default
+    img: pokemon.sprites.front_default,
+    speciesUrl:pokemon.species.url
   }
 }
 
@@ -57,7 +58,7 @@ export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: Pok
   }
 }
 
-export async function responseAbilitiesToModelAbilities(responseAbilities: PokemonResponseAbility[]): Promise<PokemonAbility[]> {
+export async function responseAbilitiesToModelAbilities(responseAbilities: PokemonResponseAbility[]): Promise<PokemonDetailsAbility[]> {
   return Promise.all(
     responseAbilities.map(
       async responseAbility => {
@@ -73,7 +74,7 @@ export async function responseAbilitiesToModelAbilities(responseAbilities: Pokem
           url: responseAbility.ability.url,
           longDescription: longDescription && longDescription.effect || 'No long description',
           shortDescription: shortDescription && shortDescription.flavor_text || 'No short description'
-        } as PokemonAbility
+        } as PokemonDetailsAbility
       }
     )
   )
@@ -81,7 +82,7 @@ export async function responseAbilitiesToModelAbilities(responseAbilities: Pokem
 }
 
 export async function responseMovesToModelMoves(responseMoves: PokemonResponseMove[], numberOfMappings: number) {
-  const mappedMoves: PokemonMove[] = []
+  const mappedMoves: PokemonDetailsMove[] = []
 
   for (let i = 0; i < responseMoves.length && i < numberOfMappings; i++) {
     const { data: move } = await useFetch<PokemonDetailedMoveResponse>(
@@ -100,7 +101,7 @@ export async function responseMovesToModelMoves(responseMoves: PokemonResponseMo
 
 }
 
-export async function speciesResponseToDetailedSpeciesMapper(speciesUrl: string): Promise<PokemonSpecies> {
+export async function speciesResponseToDetailedSpeciesMapper(speciesUrl: string): Promise<PokemonDetailsSpecies> {
   const { data: rawSpecies } = await useFetch<PokemonDetailedSpeciesResponse>(speciesUrl, {
     pick: ['id', 'name', 'order', 'capture_rate']
   })
