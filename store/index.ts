@@ -14,6 +14,8 @@ import { getRandomPokemonDefaultState } from '~/helpers/default-random-pokemon.s
 import { getDefaultPokemonResponseState } from '~/helpers/default-pokemon-response.state'
 import { useToasterStore } from '~/store/toaster.store'
 
+const BASE_URL = `https://pokeapi.co/api/v2`
+
 export const useContextStore = defineStore('context', () => {
   const toasterStore = useToasterStore()
   const randomPokemon = ref(getRandomPokemonDefaultState())
@@ -33,7 +35,7 @@ export const useContextStore = defineStore('context', () => {
   }
 
   async function getPokemon(id: string | number): Promise<PokemonResponse> {
-    const { data: pokemon } = await useFetch<PokemonResponse>(`https://pokeapi.co/api/v2/pokemon/${id}`, {
+    const { data: pokemon } = await useFetch<PokemonResponse>(`${BASE_URL}/pokemon/${id}`, {
       pick: ['id', 'name', 'stats', 'abilities', 'sprites', 'moves', 'species', 'location_area_encounters']
     })
     return pokemon.value as PokemonResponse
