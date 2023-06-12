@@ -1,8 +1,8 @@
 <script setup lang='ts'>
   import { useContextStore } from '~/store'
   import { storeToRefs } from 'pinia'
-  import PokemonDetailsMoves from '~/pages/pokemon-detailed/PokemonDetailsMoves.vue'
-  import PokemonDetailsSpecies from '~/pages/pokemon-detailed/PokemonDetailsSpecies.vue'
+  import PokemonDetailsMoves from '~/components/pokemon-details-moves.vue'
+  import PokemonDetailsSpecies from '~/components/pokemon-details-species.vue'
 
   const route = useRoute()
   const store = useContextStore()
@@ -26,10 +26,10 @@
   <h1>{{ pokemonDetails && pokemonDetails.name }}</h1>
   <v-container :fluid='true'>
     <v-row>
-      <v-col cols='4' sm='12' class='d-flex flex-column align-center justify-center'>
+      <v-col xl='4' lg='4' md='4' sm='12' xs='12'>
         <pokemon-sprites-display :sprites='pokemonDetails.sprites'></pokemon-sprites-display>
       </v-col>
-      <v-col cols='8' sm='12'>
+      <v-col xl='8' lg='8' md='8' sm='12' xs='12'>
         <v-card>
           <v-tabs
             v-model='tab'

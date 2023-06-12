@@ -68,7 +68,7 @@ export type PokemonModelStats = {
   speed: number
 }
 
-//End of pokemon model types
+//End of pokemons model types
 
 //Detailed model
 export interface PokemonDetailsModel {

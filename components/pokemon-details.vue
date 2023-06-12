@@ -1,6 +1,6 @@
 <template>
   <v-card class='elevation-6 mt-10'>
-    <v-container>
+    <v-container v-if='randomPokemon.name'>
       <v-row align='center'>
         <v-col xs='12' sm='12' md='4' lg='2' xl='2' class='d-flex align-center justify-center'>
           <v-img :src='randomPokemon.img' width='128px' height='128px'></v-img>
@@ -12,23 +12,39 @@
             </v-card-title>
 
             <v-card-text>
-              <p class='mt-2'>
-                <v-icon icon='mdi-heart' color='green'></v-icon>
-                Health points: {{ randomPokemon.stats.hp }}
-              </p>
-              <p class='mt-2'>
-                <v-icon icon='mdi-sword' color='red'></v-icon>
-                Attack: {{ randomPokemon.stats.attack }}
-              </p>
-              <p class='mt-2'>
-                <v-icon icon='mdi-shield' color='blue'></v-icon>
-                Defense: {{ randomPokemon.stats.defense }}
-              </p>
-              <p class='mt-2'>
-                <v-icon icon='mdi-fast-forward' color='purple'></v-icon>
-                Speed: {{ randomPokemon.stats.speed }}
-              </p>
+              <pokemon-detail-stat icon='mdi-heart' title='Health points'
+                                   :statValue='randomPokemon.stats.hp' color='green'></pokemon-detail-stat>
+              <pokemon-detail-stat icon='mdi-sword' title='Attack'
+                                   :statValue='randomPokemon.stats.attack' color='red'></pokemon-detail-stat>
+              <pokemon-detail-stat icon='mdi-shield' title='Defense'
+                                   :statValue='randomPokemon.stats.defense' color='blue'></pokemon-detail-stat>
+              <pokemon-detail-stat icon='mdi-fast-forward' title='Speed'
+                                   :statValue='randomPokemon.stats.speed' color='purple'></pokemon-detail-stat>
+            </v-card-text>
+          </v-card-text>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container v-else-if='!randomPokemon.name'>
+      <v-row align='center'>
+        <v-col xs='12' sm='12' md='4' lg='2' xl='2' class='d-flex align-center justify-center'>
+          <v-img src='' width='128px' height='128px'></v-img>
+        </v-col>
+        <v-divider vertical></v-divider>
+        <v-col xs='12' sm='12' md='8' lg='10' xl='10'>
+          <v-card-text>
+            <v-card-title v-text='"Loading..."'>
+            </v-card-title>
 
+            <v-card-text>
+              <pokemon-detail-stat icon='mdi-heart' title='Health points'
+                                   :statValue='0' color='green'></pokemon-detail-stat>
+              <pokemon-detail-stat icon='mdi-sword' title='Attack'
+                                   :statValue='0' color='red'></pokemon-detail-stat>
+              <pokemon-detail-stat icon='mdi-shield' title='Defense'
+                                   :statValue='0' color='blue'></pokemon-detail-stat>
+              <pokemon-detail-stat icon='mdi-fast-forward' title='Speed'
+                                   :statValue='0' color='purple'></pokemon-detail-stat>
             </v-card-text>
           </v-card-text>
         </v-col>
@@ -38,8 +54,12 @@
 
   <v-container class='mt-4'>
     <v-row justify='end'>
-      <v-btn class='mr-2' color='red' @click='store.keepPokemon()' prepend-icon='mdi-pokeball'>Keep</v-btn>
-      <v-btn color='blue' @click='store.loadRandomPokemon()' prepend-icon='mdi-magnify'>Search</v-btn>
+      <v-btn class='mr-2' color='red' :disabled='!randomPokemon.name' @click='store.keepPokemon()'
+             prepend-icon='mdi-pokeball'>Keep
+      </v-btn>
+      <v-btn color='blue' :disabled='!randomPokemon.name' @click='store.loadRandomPokemon()' prepend-icon='mdi-magnify'>
+        Search
+      </v-btn>
     </v-row>
   </v-container>
 </template>
@@ -50,7 +70,7 @@
   const store = useContextStore()
   const { randomPokemon } = storeToRefs(useContextStore())
 
-  store.loadRandomPokemon();
+  store.loadRandomPokemon()
 
 </script>
 

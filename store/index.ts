@@ -24,6 +24,7 @@ export const useContextStore = defineStore('context', () => {
   const rawPokemonDetails = ref(getDefaultPokemonResponseState()) //store the raw response model (i see no other way of storing it for later use)
 
   async function loadRandomPokemon() {
+    randomPokemon.value = getRandomPokemonDefaultState()
     const response = await getPokemon(getRandomNumber(1, 1000))
     randomPokemon.value = response ? pokemonResponseToPokemonModelMapper(response) : getDefaultPokemonState()
   }
@@ -49,14 +50,14 @@ export const useContextStore = defineStore('context', () => {
         toasterStore.success('Pokemon captured', 2000)
         loadRandomPokemon()
       } else {
-        toasterStore.error('Failed to capture pokemon. Try again?', 2000)
+        toasterStore.error('Failed to capture pokemons. Try again?', 2000)
       }
     }))
   }
 
   function removePokemon(pokemon: PokemonModel) {
     if (!pokemon || !pokemon.id) {
-      console.error('No pokemon provided')
+      console.error('No pokemons provided')
       return
     }
     storedPokemons.value = storedPokemons.value.filter(p => p.id !== pokemon.id)

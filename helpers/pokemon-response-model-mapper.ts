@@ -35,7 +35,7 @@ export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): P
     mainAbility: pokemon.abilities[0].ability.name,
     stats: { ...{ hp: 0, attack: 0, defense: 0, speed: 0 }, ...mappedStats }, //ensure that there will always be data, even though it's unlikely to be missing
     img: pokemon.sprites.front_default,
-    speciesUrl:pokemon.species.url
+    speciesUrl: pokemon.species.url
   }
 }
 
