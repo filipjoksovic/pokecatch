@@ -3,7 +3,7 @@ import { PokemonDetailsModel } from '~/utils/types'
 export function getDefaultPokemonDetailsState(): Partial<PokemonDetailsModel> {
 
   return {
-    id: '-1',
+    id: -1,
     name: '',
     abilities: [],
     sprites: {

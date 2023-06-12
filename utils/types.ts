@@ -1,6 +1,6 @@
 // Raw response data
 export type PokemonResponse = {
-  id: string;
+  id: number;
   name: string
   stats: PokemonResponseStat[]
   abilities: PokemonResponseAbility[];
@@ -53,7 +53,7 @@ export interface PokemonResponseSpecies {
 //Pokemon model types
 
 export type PokemonModel = {
-  id: string;
+  id: number;
   name: string
   stats: PokemonModelStats
   mainAbility: string
@@ -72,7 +72,7 @@ export type PokemonModelStats = {
 
 //Detailed model
 export interface PokemonDetailsModel {
-  id: string;
+  id: number;
   name: string;
   abilities: PokemonDetailsAbility[];
   moves: PokemonDetailsMove[];

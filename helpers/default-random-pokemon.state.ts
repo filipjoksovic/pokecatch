@@ -2,7 +2,7 @@ import { PokemonModel } from '~/utils/types'
 
 export function getRandomPokemonDefaultState(): PokemonModel {
   return {
-    id: '',
+    id: -1,
     name: '',
     stats: {
       hp: 0,

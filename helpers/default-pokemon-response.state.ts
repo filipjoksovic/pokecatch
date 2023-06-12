@@ -2,7 +2,7 @@ import { PokemonResponse } from '~/utils/types'
 
 export function getDefaultPokemonResponseState(): PokemonResponse {
   return {
-    id: '',
+    id: -1,
     name: '',
     stats: [],
     abilities: [],

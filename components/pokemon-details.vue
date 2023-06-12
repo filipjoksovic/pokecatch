@@ -50,6 +50,8 @@
   const store = useContextStore()
   const { randomPokemon } = storeToRefs(useContextStore())
 
+  store.loadRandomPokemon();
+
 </script>
 
 <style>

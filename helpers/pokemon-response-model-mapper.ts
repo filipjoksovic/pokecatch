@@ -18,10 +18,10 @@ import {
 const SELECTED_LANG = 'en'
 
 export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): PokemonModel {
-  const pokemonStats: PokemonResponseStat[] = pokemon.stats
+  const rawStats: PokemonResponseStat[] = pokemon.stats
 
   const includedStats = ['hp', 'attack', 'defense', 'speed']
-  const mappedStats = pokemonStats.filter(
+  const mappedStats = rawStats.filter(
     stat => includedStats.includes(stat.stat.name)
   ).reduce(
     (acc: Partial<PokemonModelStats>, item) => {
@@ -41,7 +41,7 @@ export function pokemonResponseToPokemonModelMapper(pokemon: PokemonResponse): P
 
 export async function pokemonResponseToPokemonDetailsMapper(pokemonResponse: PokemonResponse): Promise<Partial<PokemonDetailsModel>> {
   //to avoid making unecessary requests and increasing loading times,
-  // keep abilities, species and moves data separate when just loading the model, creating all kinds of other problems :)
+  // keep abilities, species and moves data separate when just loading the model, creating all kinds of other problems
   return {
     id: pokemonResponse.id,
     name: capitalizeFirstLetter(pokemonResponse.name),
@@ -101,7 +101,7 @@ export async function responseMovesToModelMoves(responseMoves: PokemonResponseMo
 
 }
 
-export async function speciesResponseToDetailedSpeciesMapper(speciesUrl: string): Promise<PokemonDetailsSpecies> {
+export async function responseSpeciesToModelSpecies(speciesUrl: string): Promise<PokemonDetailsSpecies> {
   const { data: rawSpecies } = await useFetch<PokemonDetailedSpeciesResponse>(speciesUrl, {
     pick: ['id', 'name', 'order', 'capture_rate']
   })

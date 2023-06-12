@@ -5,7 +5,7 @@ import {
   pokemonResponseToPokemonModelMapper,
   responseAbilitiesToModelAbilities,
   responseMovesToModelMoves,
-  speciesResponseToDetailedSpeciesMapper
+  responseSpeciesToModelSpecies
 } from '~/helpers/pokemon-response-model-mapper'
 import { getDefaultPokemonState } from '~/helpers/default-pokemon-state'
 import { PokemonModel, PokemonResponse } from '~/utils/types'
@@ -22,7 +22,7 @@ export const useContextStore = defineStore('context', () => {
   const rawPokemonDetails = ref(getDefaultPokemonResponseState()) //store the raw response model (i see no other way of storing it for later use)
 
   async function loadRandomPokemon() {
-    const response = await getPokemon(getRandomNumber(1, 1000).toString())
+    const response = await getPokemon(getRandomNumber(1, 1000))
     randomPokemon.value = response ? pokemonResponseToPokemonModelMapper(response) : getDefaultPokemonState()
   }
 
@@ -40,7 +40,7 @@ export const useContextStore = defineStore('context', () => {
   }
 
   function keepPokemon() {
-    speciesResponseToDetailedSpeciesMapper(randomPokemon.value.speciesUrl).then((species => {
+    responseSpeciesToModelSpecies(randomPokemon.value.speciesUrl).then((species => {
       const number = getRandomNumber(1, 255)
       if (number < species.captureRate) {
         storedPokemons.value.push(randomPokemon.value)
@@ -58,6 +58,7 @@ export const useContextStore = defineStore('context', () => {
       return
     }
     storedPokemons.value = storedPokemons.value.filter(p => p.id !== pokemon.id)
+    toasterStore.success('Pokemon successfully removed', 2000)
   }
 
   function loadPokemonMoves() {
@@ -80,7 +81,7 @@ export const useContextStore = defineStore('context', () => {
   }
 
   function loadPokemonSpecies() {
-    speciesResponseToDetailedSpeciesMapper(rawPokemonDetails.value.species.url).then((species) => {
+    responseSpeciesToModelSpecies(rawPokemonDetails.value.species.url).then((species) => {
       pokemonDetails.value = {
         ...pokemonDetails.value,
         species: species
@@ -98,7 +99,6 @@ export const useContextStore = defineStore('context', () => {
     loadPokemonMoves,
     removePokemon,
     keepPokemon,
-    getPokemon,
     getPokemonDetails,
     loadRandomPokemon
   }

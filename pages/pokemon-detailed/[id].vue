@@ -6,7 +6,7 @@
 
   const route = useRoute()
   const store = useContextStore()
-  store.getPokemonDetails(route.params.id.toString())
+  store.getPokemonDetails(Number.parseInt(route.params.id as string))
   const { pokemonDetails } = storeToRefs(store)
 
   const tab = ref(null)

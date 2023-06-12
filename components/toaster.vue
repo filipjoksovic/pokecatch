@@ -12,7 +12,6 @@
       <v-icon
         icon='mdi-close'
         @click='visible = false'
-
       >
       </v-icon>
     </template>
